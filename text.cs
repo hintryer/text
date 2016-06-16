@@ -9,15 +9,14 @@ using Microsoft.Win32;
 using System.Threading;
 using System.IO;
 
-using WindowsFormsApplication6;//添加带窗体的命名空间
+using owntext;//添加带窗体的命名空间
 
 namespace textfile
 {
-    public partial class Form2
+    public partial class text_file
     {
         private Form1 text_form;
-        private RichTextBox rich2;
-
+     
         protected string strFileName;
 
         protected string strProgName;
@@ -32,22 +31,20 @@ namespace textfile
             "Text Documents (*.txt)|*.txt|Web Pages (*.htm;*.html)|*.htm;*.html|Rich Text Format (*.rtf)|*.rtf|All Files (*.*)|*.*";
         const string strMruList = "MruList";
         List<string> mruList = new List<string>();
-
-        public Form2(Form1 form1)
+       
+        public text_file(Form1 form1)
         {
             text_form = form1;
-            RichTextBox rich2 = text_form.richTextBox1;
-         
+            var txt = text_form.richTextBox1;
+            
         }
+
         public void sss()
         {
             strProgName = "Notepad Clone with File";
             MakeCaption();
         }
-        public void pe()
-        {
-            text_form.richTextBox1.Text = "se";
-        }
+
         protected string FileTitle()
         {
             return (strFileName != null && strFileName.Length > 1) ?
@@ -55,8 +52,8 @@ namespace textfile
         }
         protected bool OkToTrash()
         {
-            
-            if (!rich2.Modified)
+
+            if (!text_form.richTextBox1.Modified)
             {
                 return true;
             }
@@ -98,14 +95,14 @@ namespace textfile
                 filterIndex = ofd.FilterIndex;
             }
         }
-        private void new_click()
+        public  void new_click()
         {
             if (!OkToTrash())
                 return;
 
-            rich2.Clear();
-            rich2.ClearUndo();
-            rich2.Modified = false;
+            text_form.richTextBox1.Clear();
+            text_form.richTextBox1.ClearUndo();
+            text_form.richTextBox1.Modified = false;
 
             strFileName = null;
             MakeCaption();
@@ -118,7 +115,7 @@ namespace textfile
             {
                 try
                 {
-                    rich2.LoadFile(strFileName, RichTextBoxStreamType.RichText);
+                    text_form.richTextBox1.LoadFile(strFileName, RichTextBoxStreamType.RichText);
                 }
                 catch (Exception exc)
                 {
@@ -148,7 +145,7 @@ namespace textfile
                         MessageBoxIcon.Asterisk);
                     return;
                 }
-                rich2.Text = sr.ReadToEnd();
+                text_form.richTextBox1.Text = sr.ReadToEnd();
                 sr.Close();
             }
 
@@ -157,10 +154,10 @@ namespace textfile
 
             MakeCaption();
 
-            rich2.SelectionStart = 0;
-            rich2.SelectionLength = 0;
-            rich2.Modified = false;
-            rich2.ClearUndo();
+            text_form.richTextBox1.SelectionStart = 0;
+            text_form.richTextBox1.SelectionLength = 0;
+            text_form.richTextBox1.Modified = false;
+            text_form.richTextBox1.ClearUndo();
             //text_form.Cursor = Cursors.Default;
         }
         bool SaveFileDlg()
@@ -241,7 +238,7 @@ namespace textfile
             ////    clearItem.Click += eh;
             //}
         }
-        private void save_Click()
+        public  void save_Click()
         {
             if (strFileName == null || strFileName.Length == 0)
                 SaveFileDlg();
@@ -249,32 +246,32 @@ namespace textfile
                 SaveFile();
         }
 
-        private void saveAs_Click()
+        public  void saveAs_Click()
         {
             SaveFileDlg();
         }
-        protected virtual void pageSetup_Click()
+        public  virtual void pageSetup_Click()
         {
             MessageBox.Show("Print not yet implemented!", strProgName);
         }
 
-        protected virtual void preview_Click()
+        public  virtual void preview_Click()
         {
             MessageBox.Show("Print not yet implemented!", strProgName);
         }
 
-        protected virtual void print_Click()
+        public  virtual void print_Click()
         {
             MessageBox.Show("Print not yet implemented!", strProgName);
         }
 
-        private void exit_Click()
+        public  void exit_Click()
         {
             if (OkToTrash())
             {
                 text_form.Close();
                 Application.Exit();
-                
+
             }
         }
 
@@ -307,7 +304,7 @@ namespace textfile
                 //}
                 //else
                 {
-                    sw.Write(rich2.Text);
+                    sw.Write(text_form.richTextBox1.Text);
                 }
                 sw.Close();
                 updateMRUList(strFileName);
@@ -320,7 +317,7 @@ namespace textfile
                     MessageBoxIcon.Asterisk);
                 return;
             }
-            rich2.Modified = false;
+            text_form.richTextBox1.Modified = false;
             text_form.Cursor = Cursors.Default;
         }
     }
