@@ -323,51 +323,5 @@ namespace textfile
             rich2.Modified = false;
             text_form.Cursor = Cursors.Default;
         }
-
-        private void InitializeComponent()
-        {
-            //text_form.rich2 = new System.Windows.Forms.RichTextBox();
-            //text_form.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            //text_form.SuspendLayout();
-            //// 
-            //// rich2
-            //// 
-            //text_form.rich2.Location = new System.Drawing.Point(76, 72);
-            //text_form.rich2.Name = "rich2";
-            //text_form.rich2.Size = new System.Drawing.Size(100, 96);
-            //text_form.rich2.TabIndex = 0;
-            //text_form.rich2.Text = "";
-            //// 
-            //// richTextBox1
-            //// 
-            //text_form.richTextBox1.Location = new System.Drawing.Point(182, 111);
-            //text_form.richTextBox1.Name = "richTextBox1";
-            //text_form.richTextBox1.Size = new System.Drawing.Size(100, 96);
-            //text_form.richTextBox1.TabIndex = 0;
-            //text_form.richTextBox1.Text = "";
-            //// 
-            //// Form2
-            //// 
-            //text_form.ClientSize = new System.Drawing.Size(284, 262);
-            //text_form.Controls.Add(text_form.richTextBox1);
-            //text_form.Controls.Add(text_form.rich2);
-            //text_form.Name = "Form2";
-            //text_form.ResumeLayout(false);
-
-        }
-         public  void ope(RichTextBox rtb)
-        {
-            //rich2.Modified=rtb.Modified;
-            //rtb.Location = text_form.rich2.Location;
-            //rtb.Name =text_form.rich2.Name;
-            //rtb.Size =text_form.rich2.Size;
-            //rtb.TabIndex =text_form.rich2.TabIndex;
-            //rtb.Text =text_form.rich2.Text;
-        }
-    }
-
-    public class sddf
-    {
-
     }
 }
