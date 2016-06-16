@@ -9,13 +9,19 @@ using Microsoft.Win32;
 using System.Threading;
 using System.IO;
 
-namespace TextFile
-{
-    public class fileinit
-    {
-        protected string strFileName;
-        protected string strProgName;
+using WindowsFormsApplication6;//添加带窗体的命名空间
 
+namespace textfile
+{
+    public partial class Form2
+    {
+        private Form1 text_form;
+        private RichTextBox rich2;
+
+        protected string strFileName;
+
+        protected string strProgName;
+        protected ResourceManager resources;
         int filterIndex;
         const string strNewLine = "NewLine";
         const string strFileEncoding = "FileEncoding";        // For registry
@@ -26,25 +32,22 @@ namespace TextFile
             "Text Documents (*.txt)|*.txt|Web Pages (*.htm;*.html)|*.htm;*.html|Rich Text Format (*.rtf)|*.rtf|All Files (*.*)|*.*";
         const string strMruList = "MruList";
         List<string> mruList = new List<string>();
-        RichTextBox richTextBox1 = new RichTextBox();
-        Form thisfrom=new Form();
-        public class myVar
-        {
-            
-        }
-        public void Form1(Form2 form2)
-        {
 
-            this.Form1 = form2;
-        }
-            
-            public void file()
+        public Form2(Form1 form1)
         {
-
-            strProgName = "Notepad with File";
+            text_form = form1;
+            RichTextBox rich2 = text_form.richTextBox1;
+         
+        }
+        public void sss()
+        {
+            strProgName = "Notepad Clone with File";
             MakeCaption();
         }
-
+        public void pe()
+        {
+            text_form.richTextBox1.Text = "se";
+        }
         protected string FileTitle()
         {
             return (strFileName != null && strFileName.Length > 1) ?
@@ -52,7 +55,8 @@ namespace TextFile
         }
         protected bool OkToTrash()
         {
-            if (!richTextBox1.Modified)
+            
+            if (!rich2.Modified)
             {
                 return true;
             }
@@ -94,14 +98,14 @@ namespace TextFile
                 filterIndex = ofd.FilterIndex;
             }
         }
-        public void new_click()
+        private void new_click()
         {
             if (!OkToTrash())
                 return;
 
-            richTextBox1.Clear();
-            richTextBox1.ClearUndo();
-            richTextBox1.Modified = false;
+            rich2.Clear();
+            rich2.ClearUndo();
+            rich2.Modified = false;
 
             strFileName = null;
             MakeCaption();
@@ -109,17 +113,17 @@ namespace TextFile
         // Utility routines
         protected void LoadFile(string strFileName)
         {
-            thisfrom.Cursor = Cursors.WaitCursor;
+            //text_form.Cursor = Cursors.WaitCursor;
             if (strFileName.EndsWith(".rtf"))
             {
                 try
                 {
-                    richTextBox1.LoadFile(strFileName, RichTextBoxStreamType.RichText);
+                    rich2.LoadFile(strFileName, RichTextBoxStreamType.RichText);
                 }
                 catch (Exception exc)
                 {
                     //logger.Error(exc);
-                    thisfrom.Cursor = Cursors.Default;
+                    text_form.Cursor = Cursors.Default;
                     MessageBox.Show(exc.Message, strProgName,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
@@ -138,25 +142,26 @@ namespace TextFile
                 catch (Exception exc)
                 {
                     //logger.Error(exc);
-                    thisfrom.Cursor = Cursors.Default;
+                    text_form.Cursor = Cursors.Default;
                     MessageBox.Show(exc.Message, strProgName,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Asterisk);
                     return;
                 }
-                richTextBox1.Text = sr.ReadToEnd();
+                rich2.Text = sr.ReadToEnd();
                 sr.Close();
             }
 
-            //thisfrom.strFileName = strFileName;
-             
+            //text_form.strFileName = strFileName;
+            updateMRUList(strFileName);
+
             MakeCaption();
 
-            richTextBox1.SelectionStart = 0;
-            richTextBox1.SelectionLength = 0;
-            richTextBox1.Modified = false;
-            richTextBox1.ClearUndo();
-            thisfrom.Cursor = Cursors.Default;
+            rich2.SelectionStart = 0;
+            rich2.SelectionLength = 0;
+            rich2.Modified = false;
+            rich2.ClearUndo();
+            //text_form.Cursor = Cursors.Default;
         }
         bool SaveFileDlg()
         {
@@ -193,6 +198,49 @@ namespace TextFile
             string Text;
             Text = FileTitle() + " - " + strProgName;
         }
+
+        private void updateMRUList(String fileName)
+        {
+            if (mruList.Contains(fileName))
+            {
+                mruList.Remove(fileName);
+            }
+
+            mruList.Insert(0, fileName);
+
+            if (mruList.Count > 10)
+            {
+                mruList.RemoveAt(10);
+            }
+
+            updateMRUMenu();
+        }
+        /// <summary>
+        /// Update MRU Submenu.
+        /// </summary>
+        private void updateMRUMenu()
+        {
+            //text_form.recentFilesToolStripMenuItem.DropDownItems.Clear();
+
+            //if (mruList.Count == 0)
+            //{
+            //    text_form.recentFilesToolStripMenuItem.DropDownItems.Add(resources.GetString("No_Recent_Files"));
+            //}
+            //else
+            //{
+            //    EventHandler eh = new EventHandler(MenuRecentFilesOnClick);
+
+            //    foreach (string fileName in mruList)
+            //    {
+            //        ToolStripItem item = text_form.recentFilesToolStripMenuItem.DropDownItems.Add(fileName);
+            //        item.Click += eh;
+            //    }
+            //    text_form.recentFilesToolStripMenuItem.DropDownItems.Add("-");
+            //    strClearRecentFiles = resources.GetString("Clear_Recent_Files");
+            //    ToolStripItem clearItem = text_form.recentFilesToolStripMenuItem.DropDownItems.Add(strClearRecentFiles);
+            ////    clearItem.Click += eh;
+            //}
+        }
         private void save_Click()
         {
             if (strFileName == null || strFileName.Length == 0)
@@ -224,34 +272,102 @@ namespace TextFile
         {
             if (OkToTrash())
             {
-                thisfrom.Close();
+                text_form.Close();
                 Application.Exit();
+                
             }
         }
 
         void SaveFile()
         {
-            thisfrom.Cursor = Cursors.WaitCursor;
+            //if (IsUnicode(richTextBox1.Text) )
+            //{
+            //    if (DialogResult.No == MessageBox.Show(
+            //        ("The_file_appears_to_contain_Unicode_characters") + ".\n" +
+            //        ("Saving_as_Windows_ANSI_will_result_in_loss_of_those_characters") + ".\n\n" +
+            //        ("Do_you_still_want_to_proceed") + "?\n" +
+            //        "\u2022 " + ("To_save_click_Yes") + ".\n" +
+            //        "\u2022 " + ("To_preserve_them_click_No_Then_save_file_in_a_Unicode_format") + ".",
+            //        ("Confirm_file_save"),
+            //        MessageBoxButtons.YesNo,
+            //        MessageBoxIcon.Warning))
+            //        return;
+            //}
+
+            text_form.Cursor = Cursors.WaitCursor;
             try
             {
                 StreamWriter sw = new StreamWriter(strFileName, false, System.Text.Encoding.Default);
 
                 sw.NewLine = strNewLine;
-                sw.Write(richTextBox1.Text);
-                sw.Close();
 
+                //if (strNewLine == "\r\n")
+                //{
+                //    sw.Write(richTextBox1.Text.Replace("\n", "\r\n"));
+                //}
+                //else
+                {
+                    sw.Write(rich2.Text);
+                }
+                sw.Close();
+                updateMRUList(strFileName);
             }
             catch (Exception exc)
             {
-                thisfrom.Cursor = Cursors.Default;
+                text_form.Cursor = Cursors.Default;
                 MessageBox.Show(exc.Message, strProgName,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Asterisk);
                 return;
             }
-            richTextBox1.Modified = false;
-            thisfrom.Cursor = Cursors.Default;
+            rich2.Modified = false;
+            text_form.Cursor = Cursors.Default;
         }
+
+        private void InitializeComponent()
+        {
+            //text_form.rich2 = new System.Windows.Forms.RichTextBox();
+            //text_form.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            //text_form.SuspendLayout();
+            //// 
+            //// rich2
+            //// 
+            //text_form.rich2.Location = new System.Drawing.Point(76, 72);
+            //text_form.rich2.Name = "rich2";
+            //text_form.rich2.Size = new System.Drawing.Size(100, 96);
+            //text_form.rich2.TabIndex = 0;
+            //text_form.rich2.Text = "";
+            //// 
+            //// richTextBox1
+            //// 
+            //text_form.richTextBox1.Location = new System.Drawing.Point(182, 111);
+            //text_form.richTextBox1.Name = "richTextBox1";
+            //text_form.richTextBox1.Size = new System.Drawing.Size(100, 96);
+            //text_form.richTextBox1.TabIndex = 0;
+            //text_form.richTextBox1.Text = "";
+            //// 
+            //// Form2
+            //// 
+            //text_form.ClientSize = new System.Drawing.Size(284, 262);
+            //text_form.Controls.Add(text_form.richTextBox1);
+            //text_form.Controls.Add(text_form.rich2);
+            //text_form.Name = "Form2";
+            //text_form.ResumeLayout(false);
+
+        }
+         public  void ope(RichTextBox rtb)
+        {
+            //rich2.Modified=rtb.Modified;
+            //rtb.Location = text_form.rich2.Location;
+            //rtb.Name =text_form.rich2.Name;
+            //rtb.Size =text_form.rich2.Size;
+            //rtb.TabIndex =text_form.rich2.TabIndex;
+            //rtb.Text =text_form.rich2.Text;
+        }
+    }
+
+    public class sddf
+    {
 
     }
 }
